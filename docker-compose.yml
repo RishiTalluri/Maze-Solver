@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - SECRET_KEY=${SECRET_KEY:-dev-secret}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-jwt-secret}
+      - DATABASE_URL=sqlite:///pathfinding.db
+    volumes:
+      - ./backend:/app
+      - db_data:/app/instance
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db_data:
