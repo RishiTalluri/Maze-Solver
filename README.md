@@ -32,7 +32,7 @@ A full-stack, production-quality pathfinding platform built with **React + TypeS
 
 ## 🚀 Quick Start
 
-### Option 1 — Manual setup (recommended for development)
+### Option 1 - Manual setup (recommended for development)
 
 **Backend:**
 ```bash
@@ -53,7 +53,7 @@ npm start                     # runs on :3000
 
 Open http://localhost:3000
 
-### Option 2 — Docker
+### Option 2 - Docker
 
 ```bash
 cp backend/.env.example backend/.env
