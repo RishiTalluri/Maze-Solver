@@ -1,4 +1,4 @@
-# PathFinder — Pathfinding Experimentation & Analytics Platform
+# PathFinder - Pathfinding Experimentation & Analytics Platform
 
 A full-stack, production-quality pathfinding platform built with **React + TypeScript** (frontend) and **Flask + SQLite** (backend).
 
@@ -7,32 +7,32 @@ A full-stack, production-quality pathfinding platform built with **React + TypeS
 ## ✨ Features
 
 ### Core
-- 🧩 **Interactive Maze Editor** — click + drag to draw walls, place start/end nodes, paint terrain
-- ⚡ **6 Algorithms** — BFS, DFS, A\*, Dijkstra, Greedy BFS, Bidirectional BFS
-- 🎬 **Real-time Animation** — step-by-step visualization with adjustable speed
-- 🏔 **Weighted Terrain** — grass, sand, mud, water, mountain with configurable costs
-- 🎯 **Multiple Goals** — algorithms stop at the nearest reachable goal
+- 🧩 **Interactive Maze Editor** - click + drag to draw walls, place start/end nodes, paint terrain
+- ⚡ **6 Algorithms** - BFS, DFS, A\*, Dijkstra, Greedy BFS, Bidirectional BFS
+- 🎬 **Real-time Animation** - step-by-step visualization with adjustable speed
+- 🏔 **Weighted Terrain** - grass, sand, mud, water, mountain with configurable costs
+- 🎯 **Multiple Goals** - algorithms stop at the nearest reachable goal
 
 ### Platform
-- 🔐 **JWT Authentication** — register, login, protected routes, token refresh
-- 💾 **Save & Load Mazes** — CRUD with public/private visibility
-- 🔗 **Share Links** — generate shareable links with optional expiry
-- 🔬 **Experiment Mode** — run N algorithms on one maze, store + compare results
-- 📊 **Analytics Dashboard** — charts for execution time, nodes explored, success rate
-- 🌍 **Public Maze Browser** — search, filter by difficulty, duplicate community mazes
-- ⬇ **CSV Export** — download experiment results
+- 🔐 **JWT Authentication** - register, login, protected routes, token refresh
+- 💾 **Save & Load Mazes** - CRUD with public/private visibility
+- 🔗 **Share Links** - generate shareable links with optional expiry
+- 🔬 **Experiment Mode** - run N algorithms on one maze, store + compare results
+- 📊 **Analytics Dashboard** - charts for execution time, nodes explored, success rate
+- 🌍 **Public Maze Browser** - search, filter by difficulty, duplicate community mazes
+- ⬇ **CSV Export** - download experiment results
 
 ### Technical
-- 🗃 **SQLite Database** — normalized schema with 6 tables, foreign keys, relationships
-- 🐳 **Docker Support** — Dockerfile + docker-compose for both services
-- ✅ **20 Backend Tests** — auth, maze CRUD, algorithm correctness
-- 🔒 **Admin Panel** — system stats, user management (admin role)
+- 🗃 **SQLite Database** - normalized schema with 6 tables, foreign keys, relationships
+- 🐳 **Docker Support** - Dockerfile + docker-compose for both services
+- ✅ **20 Backend Tests** - auth, maze CRUD, algorithm correctness
+- 🔒 **Admin Panel** - system stats, user management (admin role)
 
 ---
 
 ## 🚀 Quick Start
 
-### Option 1 — Manual setup (recommended for development)
+### Option 1 - Manual setup (recommended for development)
 
 **Backend:**
 ```bash
@@ -53,7 +53,7 @@ npm start                     # runs on :3000
 
 Open http://localhost:3000
 
-### Option 2 — Docker
+### Option 2 - Docker
 
 ```bash
 cp backend/.env.example backend/.env
@@ -133,31 +133,8 @@ favorites      → user_id (FK) + maze_id (FK) [composite PK]
 | GET | /api/analytics/dashboard | ✓ | Stats summary |
 | GET | /api/analytics/algorithms | ✓ | Per-algo charts |
 
----
 
-## 🧠 Algorithm Reference
 
-| Algorithm | Optimal | Weighted | Notes |
-|-----------|---------|----------|-------|
-| BFS | ✅ | ❌ | Shortest path guaranteed |
-| DFS | ❌ | ❌ | Fast, any valid path |
-| A\* | ✅ | ✅ | Optimal + heuristic |
-| Dijkstra | ✅ | ✅ | Optimal, no heuristic |
-| Greedy BFS | ❌ | ❌ | Fast, heuristic-only |
-| Bidirectional BFS | ✅ | ❌ | Searches from both ends |
-
----
-
-## 🧪 Running Tests
-
-```bash
-cd backend
-python -m pytest tests/ -v
-```
-
-Expected: **20 passed**
-
----
 
 ## 🛠 Tech Stack
 
