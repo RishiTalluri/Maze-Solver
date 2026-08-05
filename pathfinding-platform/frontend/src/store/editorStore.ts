@@ -10,6 +10,24 @@ export const DEFAULT_TERRAINS: TerrainDef[] = [
   { key: 'mountain', label: 'Mountain', icon: '⛰',  cost: 15, color: '#1c1917' },
 ];
 
+export interface AlgoColorPair { path: string; visited: string; }
+
+// Default path/explore colors per algorithm — fully user-editable at runtime,
+// independently for the solved path vs. the explored/visited trail.
+// NOTE: never default to purple/violet shades here (product decision).
+export const DEFAULT_ALGO_COLORS: Record<AlgorithmKey, AlgoColorPair> = {
+  bfs:                { path: '#3b82f6', visited: '#3b82f6' }, // blue
+  dfs:                { path: '#06b6d4', visited: '#06b6d4' }, // cyan
+  astar:              { path: '#FFD166', visited: '#FFD166' }, // accent amber
+  dijkstra:           { path: '#FF6B35', visited: '#FF6B35' }, // primary orange
+  gbfs:               { path: '#8BC34A', visited: '#8BC34A' }, // lime — distinct from astar's amber
+  bidirectional_bfs:  { path: '#ec4899', visited: '#ec4899' }, // pink
+};
+
+// Wall is drawn like a "terrain" for probability purposes but isn't in terrainDefs.
+export const WALL_COLOR_KEY = '__wall__';
+export const DEFAULT_WALL_COLOR = '#0A0A0A';
+
 function makeGrid(rows: number, cols: number): Grid {
   return Array.from({ length: rows }, () => Array(cols).fill(0) as CellType[]);
 }
@@ -31,6 +49,8 @@ interface EditorStore {
   showTerrain: boolean;
   selectedTerrain: string;
   terrainDefs: TerrainDef[];
+  algoColors: Record<AlgorithmKey, AlgoColorPair>;
+  wallColor: string;
   animStates: AnimStateMap;
   results: SolveResults;
   isAnimating: boolean;
@@ -52,6 +72,10 @@ interface EditorStore {
   removeCustomTerrain: (key: string) => void;
   updateTerrainColor: (key: string, color: string) => void;
 
+  // Path & wall colors
+  setAlgoColor: (algo: AlgorithmKey, kind: keyof AlgoColorPair, color: string) => void;
+  setWallColor: (color: string) => void;
+
   setResults: (results: SolveResults) => void;
   setIsAnimating: (v: boolean) => void;
   setAnimStates: (states: AnimStateMap) => void;
@@ -72,6 +96,8 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   showTerrain: false,
   selectedTerrain: 'grass',
   terrainDefs: DEFAULT_TERRAINS,
+  algoColors: { ...DEFAULT_ALGO_COLORS },
+  wallColor: DEFAULT_WALL_COLOR,
   animStates: {},
   results: {},
   isAnimating: false,
@@ -165,6 +191,9 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     terrainDefs: s.terrainDefs.filter(t => t.key !== key),
     selectedTerrain: s.selectedTerrain === key ? 'grass' : s.selectedTerrain,
   })),
+
+  setAlgoColor: (algo, kind, color) => set(s => ({ algoColors: { ...s.algoColors, [algo]: { ...s.algoColors[algo], [kind]: color } } })),
+  setWallColor: (wallColor) => set({ wallColor }),
 
   setResults: (results) => set({ results }),
   setIsAnimating: (isAnimating) => set({ isAnimating }),

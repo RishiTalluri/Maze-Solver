@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import AlgorithmRun, Maze, Experiment
+from app.models import AlgorithmRun, Maze, Experiment, User
 from app.extensions import db
 from sqlalchemy import func
 
@@ -116,4 +116,48 @@ def maze_stats():
             "max_cells": size_stats.max_cells or 0,
             "min_cells": size_stats.min_cells or 0,
         }
+    })
+
+
+@analytics_bp.route("/global", methods=["GET"])
+def global_stats():
+    """
+    Platform-wide stats: per-algorithm performance aggregated across every
+    user (not just the caller), plus how many distinct users have contributed
+    runs. Intentionally NOT behind @jwt_required() — it's a public "how is
+    everyone using this" view, not personal data (no usernames/emails in the
+    response).
+    """
+    total_users = User.query.count()
+    total_runs = AlgorithmRun.query.count()
+    contributing_users = db.session.query(
+        func.count(func.distinct(AlgorithmRun.user_id))
+    ).filter(AlgorithmRun.user_id.isnot(None)).scalar() or 0
+
+    stats = db.session.query(
+        AlgorithmRun.algorithm,
+        func.count(AlgorithmRun.id).label("total_runs"),
+        func.count(func.distinct(AlgorithmRun.user_id)).label("distinct_users"),
+        func.avg(AlgorithmRun.execution_time).label("avg_time"),
+        func.avg(AlgorithmRun.nodes_explored).label("avg_nodes"),
+        func.avg(AlgorithmRun.path_length).label("avg_path"),
+        func.sum(db.case((AlgorithmRun.success == True, 1), else_=0)).label("successes"),
+    ).group_by(AlgorithmRun.algorithm).order_by(func.count(AlgorithmRun.id).desc()).all()
+
+    return jsonify({
+        "total_users": total_users,
+        "contributing_users": contributing_users,
+        "total_runs": total_runs,
+        "algorithms": [
+            {
+                "algorithm": s.algorithm,
+                "total_runs": s.total_runs,
+                "distinct_users": s.distinct_users,
+                "avg_execution_time": round(s.avg_time or 0, 2),
+                "avg_nodes_explored": round(s.avg_nodes or 0, 1),
+                "avg_path_length": round(s.avg_path or 0, 1),
+                "success_rate": round((s.successes / s.total_runs * 100), 1) if s.total_runs else 0,
+            }
+            for s in stats
+        ],
     })

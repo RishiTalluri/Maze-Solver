@@ -33,7 +33,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const hideNav = HIDE_NAV.some(p => location.pathname.startsWith(p));
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(160deg, #0d1829 0%, #182440 40%, #0f2318 75%, #1a1830 100%)' }}>
+    <div className="min-h-screen" style={{ background: 'linear-gradient(160deg, #1E1E1E 0%, #242424 40%, #1a120d 75%, #121212 100%)' }}>
       {!hideNav && <Navbar />}
       {children}
     </div>

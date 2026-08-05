@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
 const FEATURES = [
-  { icon: '🧩', title: 'Interactive Editor',       desc: 'Click and drag to build mazes. Place weighted terrain, walls, and multiple goal nodes.',              color: '#EA580C' },
-  { icon: '⚡', title: '6 Pathfinding Algorithms', desc: 'BFS, DFS, A*, Dijkstra, Greedy BFS, Bidirectional BFS — all animated step by step in real time.',    color: '#10B981' },
+  { icon: '🧩', title: 'Interactive Editor',       desc: 'Click and drag to build mazes. Place weighted terrain, walls, and multiple goal nodes.',              color: '#FF6B35' },
+  { icon: '⚡', title: '6 Pathfinding Algorithms', desc: 'BFS, DFS, A*, Dijkstra, Greedy BFS, Bidirectional BFS — all animated step by step in real time.',    color: '#FFD166' },
   { icon: '🔬', title: 'Experiment Mode',           desc: 'Run multiple algorithms on the same maze simultaneously and watch them race.',                        color: '#63b3ed' },
-  { icon: '📊', title: 'Analytics Dashboard',       desc: 'Track performance trends, success rates, and explored node counts across all your runs.',              color: '#a855f7' },
+  { icon: '📊', title: 'Analytics Dashboard',       desc: 'Track performance trends, success rates, and explored node counts across all your runs.',              color: '#06b6d4' },
   { icon: '🎲', title: 'Maze Generator',            desc: 'Generate perfect mazes or random walls. Paint terrain automatically with configurable probabilities.', color: '#f59e0b' },
   { icon: '🌍', title: 'Share & Collaborate',       desc: 'Publish mazes, generate share links, and duplicate community creations.',                             color: '#ec4899' },
 ];
 
 const ALGOS = [
   { name: 'BFS',        tag: 'Shortest path',    color: '#63b3ed' },
-  { name: 'A*',         tag: 'Optimal + fast',   color: '#10B981' },
-  { name: 'Dijkstra',   tag: 'Weighted optimal', color: '#EA580C' },
-  { name: 'DFS',        tag: 'Any valid path',   color: '#a855f7' },
+  { name: 'A*',         tag: 'Optimal + fast',   color: '#FFD166' },
+  { name: 'Dijkstra',   tag: 'Weighted optimal', color: '#FF6B35' },
+  { name: 'DFS',        tag: 'Any valid path',   color: '#06b6d4' },
   { name: 'Greedy BFS', tag: 'Heuristic only',   color: '#f59e0b' },
   { name: 'Bidir. BFS', tag: 'Meets in middle',  color: '#ec4899' },
 ];
@@ -24,12 +24,12 @@ export const LandingPage: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(160deg, #0d1829 0%, #182440 35%, #0f2318 65%, #1a1830 100%)' }}>
+    <div className="min-h-screen" style={{ background: 'linear-gradient(160deg, #1E1E1E 0%, #242424 35%, #1a120d 65%, #121212 100%)' }}>
       <div className="fixed inset-0 bg-grid opacity-40 pointer-events-none"/>
       <div className="fixed top-0 left-1/4 w-96 h-96 rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(234,88,12,0.08) 0%, transparent 70%)', filter: 'blur(40px)' }}/>
+        style={{ background: 'radial-gradient(circle, rgba(255,107,53,0.08) 0%, transparent 70%)', filter: 'blur(40px)' }}/>
       <div className="fixed bottom-1/4 right-1/4 w-80 h-80 rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)', filter: 'blur(40px)' }}/>
+        style={{ background: 'radial-gradient(circle, rgba(255,209,102,0.07) 0%, transparent 70%)', filter: 'blur(40px)' }}/>
 
       <div className="relative">
         <div className="max-w-5xl mx-auto px-4 pt-24 pb-20 text-center">

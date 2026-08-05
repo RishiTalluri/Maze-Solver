@@ -41,7 +41,7 @@ export const Navbar: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0 mr-2">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center relative overflow-hidden"
-              style={{ background: 'linear-gradient(135deg, #EA580C, #9a3412)' }}>
+              style={{ background: 'linear-gradient(135deg, #FF6B35, #b93f16)' }}>
               <span className="text-white text-[10px] font-black relative z-10">PF</span>
             </div>
             <span className="text-sm font-black tracking-tight hidden sm:block">
@@ -83,7 +83,7 @@ export const Navbar: React.FC = () => {
                 <button onClick={() => setMenuOpen(!menuOpen)}
                   className="flex items-center gap-2 px-2 py-1.5 rounded-xl glass text-xs font-semibold text-surface-200 hover:text-white transition-all">
                   <div className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black text-white"
-                    style={{ background: 'linear-gradient(135deg, #EA580C, #9a3412)' }}>
+                    style={{ background: 'linear-gradient(135deg, #FF6B35, #b93f16)' }}>
                     {user?.username?.[0]?.toUpperCase()}
                   </div>
                   <span className="hidden sm:block max-w-[80px] truncate">{user?.username}</span>

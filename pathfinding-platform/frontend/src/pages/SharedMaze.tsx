@@ -32,14 +32,14 @@ export const SharedMazePage: React.FC = () => {
   };
 
   if (loading) return (
-    <div className="flex justify-center items-center min-h-screen" style={{ background: '#0d1829' }}>
+    <div className="flex justify-center items-center min-h-screen" style={{ background: '#1E1E1E' }}>
       <Spinner size="lg" />
     </div>
   );
 
   if (error) return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center px-4"
-      style={{ background: 'linear-gradient(135deg, #0d1829 0%, #182440 50%, #0f2318 100%)' }}>
+      style={{ background: 'linear-gradient(135deg, #1E1E1E 0%, #242424 50%, #1a120d 100%)' }}>
       <div className="text-5xl mb-4 opacity-50">🔗</div>
       <h1 className="text-xl font-bold text-surface-100 mb-2">Link not found</h1>
       <p className="text-surface-400 text-sm mb-6">{error}</p>
@@ -53,7 +53,7 @@ export const SharedMazePage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
-      style={{ background: 'linear-gradient(135deg, #0d1829 0%, #182440 50%, #0f2318 100%)' }}>
+      style={{ background: 'linear-gradient(135deg, #1E1E1E 0%, #242424 50%, #1a120d 100%)' }}>
       <div className="fixed inset-0 bg-grid opacity-30 pointer-events-none" />
 
       <div className="relative w-full max-w-2xl mb-6">
@@ -65,8 +65,8 @@ export const SharedMazePage: React.FC = () => {
       <div className="relative w-full max-w-2xl glass-strong rounded-2xl overflow-hidden">
         {/* Header gradient */}
         <div className="px-6 py-5 relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, rgba(234,88,12,0.2) 0%, rgba(16,185,129,0.1) 100%)' }}>
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(234,88,12,0.1), transparent)' }} />
+          style={{ background: 'linear-gradient(135deg, rgba(255,107,53,0.2) 0%, rgba(255,209,102,0.1) 100%)' }}>
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(255,107,53,0.1), transparent)' }} />
           <div className="relative">
             <div className="flex items-center gap-2 text-xs font-semibold mb-2 text-primary-400">
               <span>🔗</span> Shared Maze
@@ -90,9 +90,9 @@ export const SharedMazePage: React.FC = () => {
               <div key={r} style={{ display: 'flex' }}>
                 {row.map((cell, c) => {
                   let bg = 'rgba(255,255,255,0.025)';
-                  if (cell === 1) bg = '#070e1a';
-                  if (cell === 2) bg = '#10B981';
-                  if (cell === 3) bg = '#EA580C';
+                  if (cell === 1) bg = '#121212';
+                  if (cell === 2) bg = '#FFD166';
+                  if (cell === 3) bg = '#FF6B35';
                   return <div key={c} style={{ width: cellSize, height: cellSize, backgroundColor: bg, border: '0.5px solid rgba(255,255,255,0.04)', boxSizing: 'border-box' }} />;
                 })}
               </div>

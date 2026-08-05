@@ -90,9 +90,9 @@ const MiniGrid: React.FC<MiniGridProps> = ({ grid, result, algo, speedRef }) => 
               {row.map((cell, c) => {
                 const k = `${r},${c}`;
                 let bg = 'rgba(255,255,255,0.025)';
-                if      (cell === 1)         bg = '#0d1829';
-                else if (cell === 2)         bg = '#10B981';
-                else if (cell === 3)         bg = '#EA580C';
+                if      (cell === 1)         bg = '#1E1E1E';
+                else if (cell === 2)         bg = '#FFD166';
+                else if (cell === 3)         bg = '#FF6B35';
                 else if (pathSet.has(k))     bg = meta.color;
                 else if (visitedSet.has(k))  bg = meta.visitedColor;
                 return (
@@ -261,10 +261,10 @@ export const DashboardPage: React.FC = () => {
 
       {/* Stats cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard label="Mazes"        value={data?.summary.total_mazes ?? 0}       icon="🧩" color="#EA580C"/>
-        <StatCard label="Experiments"  value={data?.summary.total_experiments ?? 0} icon="🧪" color="#10B981"/>
+        <StatCard label="Mazes"        value={data?.summary.total_mazes ?? 0}       icon="🧩" color="#FF6B35"/>
+        <StatCard label="Experiments"  value={data?.summary.total_experiments ?? 0} icon="🧪" color="#FFD166"/>
         <StatCard label="Algo Runs"    value={data?.summary.total_runs ?? 0}        icon="⚡" color="#63b3ed"/>
-        <StatCard label="Success Rate" value={`${data?.summary.success_rate ?? 0}%`} icon="✅" color="#a855f7"/>
+        <StatCard label="Success Rate" value={`${data?.summary.success_rate ?? 0}%`} icon="✅" color="#06b6d4"/>
       </div>
 
       {/* Compare section — only shown when user has mazes */}
@@ -277,8 +277,8 @@ export const DashboardPage: React.FC = () => {
             <p className="text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-4">Performance Averages</p>
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Avg Time',     value: `${data.averages.execution_time}ms`,          color: '#EA580C' },
-                { label: 'Avg Explored', value: data.averages.nodes_explored.toFixed(0),      color: '#10B981' },
+                { label: 'Avg Time',     value: `${data.averages.execution_time}ms`,          color: '#FF6B35' },
+                { label: 'Avg Explored', value: data.averages.nodes_explored.toFixed(0),      color: '#FFD166' },
                 { label: 'Avg Path',     value: data.averages.path_length.toFixed(0),         color: '#63b3ed' },
               ].map(({ label, value, color }) => (
                 <div key={label} className="text-center p-3 rounded-xl"
@@ -305,7 +305,7 @@ export const DashboardPage: React.FC = () => {
                       <div className="flex-1 rounded-full h-1.5 overflow-hidden"
                         style={{ background:'rgba(255,255,255,0.06)' }}>
                         <div className="h-full rounded-full transition-all"
-                          style={{ width:`${(count/max)*100}%`, background: meta?.color || '#EA580C' }}/>
+                          style={{ width:`${(count/max)*100}%`, background: meta?.color || '#FF6B35' }}/>
                       </div>
                       <span className="text-xs font-mono text-surface-500 w-5 text-right">{count}</span>
                     </div>

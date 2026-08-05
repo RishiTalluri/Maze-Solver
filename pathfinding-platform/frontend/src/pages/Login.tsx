@@ -17,7 +17,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ background:'linear-gradient(135deg, #0d1829 0%, #182440 50%, #0f2318 100%)' }}>
+    <div className="min-h-screen flex" style={{ background:'linear-gradient(135deg, #1E1E1E 0%, #242424 50%, #1a120d 100%)' }}>
       <div className="fixed inset-0 bg-grid opacity-30 pointer-events-none"/>
 
       {/* Left panel */}
@@ -25,7 +25,7 @@ export const LoginPage: React.FC = () => {
         style={{ background:'rgba(255,255,255,0.02)', borderRight:'1px solid rgba(255,255,255,0.06)' }}>
         <div className="p-10">
           <Link to="/" className="flex items-center gap-2.5 mb-10">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background:'linear-gradient(135deg,#EA580C,#9a3412)' }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background:'linear-gradient(135deg,#FF6B35,#b93f16)' }}>
               <span className="text-white text-xs font-black">PF</span>
             </div>
             <span className="font-black text-sm text-surface-100">PathFinder</span>
@@ -51,7 +51,7 @@ export const LoginPage: React.FC = () => {
         <div className="w-full max-w-sm">
           <div className="mb-8">
             <Link to="/" className="inline-flex items-center gap-2 lg:hidden mb-6">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background:'linear-gradient(135deg,#EA580C,#9a3412)' }}>
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background:'linear-gradient(135deg,#FF6B35,#b93f16)' }}>
                 <span className="text-white text-[10px] font-black">PF</span>
               </div>
               <span className="font-black text-sm text-surface-100">PathFinder</span>

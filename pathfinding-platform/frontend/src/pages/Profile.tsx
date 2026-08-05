@@ -38,7 +38,7 @@ export const ProfilePage: React.FC = () => {
         <p className="text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-4">Account Info</p>
         <div className="flex items-center gap-4 mb-5">
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0"
-            style={{ background: 'linear-gradient(135deg, #EA580C, #9a3412)', boxShadow: '0 0 20px rgba(234,88,12,0.3)' }}>
+            style={{ background: 'linear-gradient(135deg, #FF6B35, #b93f16)', boxShadow: '0 0 20px rgba(255,107,53,0.3)' }}>
             <span className="text-white text-2xl font-black">{user.username[0].toUpperCase()}</span>
           </div>
           <div>
@@ -95,7 +95,7 @@ export const ProfilePage: React.FC = () => {
         <p className="text-[10px] font-bold text-red-400/70 uppercase tracking-widest mb-2">Danger Zone</p>
         <p className="text-sm text-surface-500 mb-4">Permanently delete your account and all data. This cannot be undone.</p>
         <button className="btn-sm btn-danger" onClick={() => alert('Contact admin to delete your account')}>
-          Delete Account
+          🗑️ Delete Account
         </button>
       </div>
     </div>

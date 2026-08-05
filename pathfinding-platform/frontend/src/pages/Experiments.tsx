@@ -4,10 +4,9 @@ import { experimentsApi, solveApi } from '../api/experiments';
 import { mazesApi } from '../api/mazes';
 import { Experiment, MazeSummary, AlgorithmKey, Grid, TerrainGrid, SolveResults, AlgorithmResult } from '../types';
 import { Spinner, EmptyState, Modal, SectionHeader } from '../components/ui';
-import { ALGO_META } from '../hooks/useSolver';
+import { ALL_ALGOS, useAlgoMeta } from '../hooks/useSolver';
 import { useEditorStore } from '../store/editorStore';
-
-const ALL_ALGOS = Object.keys(ALGO_META) as AlgorithmKey[];
+import { ColorsEditor } from '../components/shared/ColorsEditor';
 
 interface AlgoGridProps {
   grid: Grid;
@@ -19,7 +18,8 @@ interface AlgoGridProps {
 }
 
 const AlgoGrid: React.FC<AlgoGridProps> = ({ grid, terrainGrid, result, algo, speedRef, label }) => {
-  const meta = ALGO_META[algo];
+  const liveAlgoMeta = useAlgoMeta();
+  const meta = liveAlgoMeta[algo];
   const { terrainDefs } = useEditorStore();
   const [visitedShown, setVisitedShown] = useState(0);
   const [pathShown, setPathShown]       = useState(0);
@@ -90,13 +90,13 @@ const AlgoGrid: React.FC<AlgoGridProps> = ({ grid, terrainGrid, result, algo, sp
               {row.map((cell, c) => {
                 const k = `${r},${c}`;
                 let bg = 'rgba(255,255,255,0.025)';
-                if      (cell === 1)         bg = '#070e1a';
-                else if (cell === 2)         bg = '#10B981';
-                else if (cell === 3)         bg = '#EA580C';
+                if      (cell === 1)         bg = '#121212';
+                else if (cell === 2)         bg = '#FFD166';
+                else if (cell === 3)         bg = '#FF6B35';
                 else if (pathSet.has(k))     bg = meta.color;
                 else if (visitedSet.has(k))  bg = meta.visitedColor;
                 else if (terrainGrid && terrainGrid[r]?.[c] && terrainGrid[r][c] !== 'empty') {
-                  bg = terrainColorMap.current[terrainGrid[r][c]] || '#1a2540';
+                  bg = terrainColorMap.current[terrainGrid[r][c]] || '#242424';
                 }
                 return (
                   <div key={c} style={{
@@ -129,9 +129,11 @@ const AlgoGrid: React.FC<AlgoGridProps> = ({ grid, terrainGrid, result, algo, sp
 };
 
 export const ExperimentsPage: React.FC = () => {
+  const liveAlgoMeta = useAlgoMeta();
   const [experiments, setExperiments] = useState<Experiment[]>([]);
   const [loading, setLoading]         = useState(true);
   const [showCreate, setShowCreate]   = useState(false);
+  const [showColors, setShowColors]   = useState(false);
   const [myMazes, setMyMazes]         = useState<MazeSummary[]>([]);
   const [selectedMaze, setSelectedMaze]   = useState('');
   const [selectedAlgos, setSelectedAlgos] = useState<AlgorithmKey[]>(['bfs', 'astar']);
@@ -207,11 +209,20 @@ export const ExperimentsPage: React.FC = () => {
         title="Experiments"
         subtitle="Run algorithms side-by-side and compare in real time"
         action={
-          <button className="btn-md btn-primary" onClick={() => setShowCreate(true)} disabled={myMazes.length === 0}>
-            + New Experiment
-          </button>
+          <div className="flex items-center gap-2">
+            <button className="btn-md btn-ghost" onClick={() => setShowColors(true)} title="Edit path, explored, wall & terrain colors">
+              🎨 Colors
+            </button>
+            <button className="btn-md btn-primary" onClick={() => setShowCreate(true)} disabled={myMazes.length === 0}>
+              + New Experiment
+            </button>
+          </div>
         }
       />
+
+      <Modal open={showColors} onClose={() => setShowColors(false)} title="🎨 Colors" maxWidth="max-w-lg">
+        <ColorsEditor/>
+      </Modal>
 
       {myMazes.length === 0 && (
         <div className="glass rounded-xl p-4 border border-amber-500/20 bg-amber-500/5">
@@ -256,7 +267,7 @@ export const ExperimentsPage: React.FC = () => {
                   result={result as AlgorithmResult}
                   algo={algo}
                   speedRef={speedRef}
-                  label={ALGO_META[algo].label}
+                  label={liveAlgoMeta[algo].label}
                 />
               );
             })}
@@ -276,7 +287,7 @@ export const ExperimentsPage: React.FC = () => {
                   <span className="text-sm font-semibold text-surface-100">{exp.name || 'Untitled Experiment'}</span>
                   <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                     {exp.algorithms.map(algo => {
-                      const meta = ALGO_META[algo];
+                      const meta = liveAlgoMeta[algo];
                       return (
                         <span key={algo}
                           style={{ color:meta.color, background:`${meta.color}15`, borderColor:`${meta.color}30` }}
@@ -295,7 +306,7 @@ export const ExperimentsPage: React.FC = () => {
                     {exp.status.toUpperCase()}
                   </span>
                   <button onClick={() => handleViewExp(exp)} className="btn-sm btn-accent">▶ View</button>
-                  <button onClick={() => handleDelete(exp.id)} className="btn-sm btn-ghost text-red-400 hover:text-red-300">✕</button>
+                  <button onClick={() => handleDelete(exp.id)} title="Delete experiment" className="btn-sm btn-ghost text-red-400 hover:text-red-300">🗑️</button>
                 </div>
               </div>
             </div>
@@ -322,7 +333,7 @@ export const ExperimentsPage: React.FC = () => {
             <label className="label">Algorithms — select 2 or more</label>
             <div className="flex flex-wrap gap-1.5 mt-2">
               {ALL_ALGOS.map(algo => {
-                const meta = ALGO_META[algo]; const sel = selectedAlgos.includes(algo);
+                const meta = liveAlgoMeta[algo]; const sel = selectedAlgos.includes(algo);
                 return (
                   <button key={algo} onClick={() => toggleAlgo(algo)}
                     style={sel ? { color:meta.color, borderColor:`${meta.color}50`, background:`${meta.color}15` } : {}}

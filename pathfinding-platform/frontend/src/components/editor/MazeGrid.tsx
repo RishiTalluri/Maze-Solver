@@ -1,10 +1,11 @@
 import React, { useRef, useCallback, useMemo } from 'react';
 import { useEditorStore } from '../../store/editorStore';
-import { ALGO_META } from '../../hooks/useSolver';
+import { useAlgoMeta } from '../../hooks/useSolver';
 import { AlgorithmKey } from '../../types';
 
 export const MazeGrid: React.FC<{ disabled?: boolean }> = ({ disabled }) => {
-  const { grid, terrainGrid, showTerrain, animStates, isAnimating, setCell, terrainDefs } = useEditorStore();
+  const { grid, terrainGrid, showTerrain, animStates, isAnimating, setCell, terrainDefs, wallColor } = useEditorStore();
+  const ALGO_META = useAlgoMeta();
   const cols = grid[0]?.length || 1;
   const isDrawing = useRef(false);
   const lastCell = useRef<string>('');
@@ -34,7 +35,7 @@ export const MazeGrid: React.FC<{ disabled?: boolean }> = ({ disabled }) => {
     const key = `${r},${c}`;
     for (const algo of algos) {
       if (algoSets[algo].path.has(key)) {
-        const color = ALGO_META[algo]?.color || '#EA580C';
+        const color = ALGO_META[algo]?.color || '#FF6B35';
         return { backgroundColor: color, boxShadow: `0 0 4px ${color}88`, border:'0.5px solid transparent', transition:'background-color 0.08s' };
       }
     }
@@ -43,15 +44,15 @@ export const MazeGrid: React.FC<{ disabled?: boolean }> = ({ disabled }) => {
         return { backgroundColor: ALGO_META[algo]?.visitedColor || 'rgba(59,130,246,0.2)', border:'0.5px solid rgba(255,255,255,0.04)', transition:'background-color 0.08s' };
       }
     }
-    if (cellType === 2) return { backgroundColor:'#10B981', boxShadow:'0 0 8px #10B98188', border:'0.5px solid #34d399' };
-    if (cellType === 3) return { backgroundColor:'#EA580C', boxShadow:'0 0 8px #EA580C88', border:'0.5px solid #fb923c' };
-    if (cellType === 1) return { backgroundColor:'#070e1a', border:'0.5px solid rgba(0,0,0,0.5)' };
+    if (cellType === 2) return { backgroundColor:'#FFD166', boxShadow:'0 0 8px #FFD16688', border:'0.5px solid #ffd674' };
+    if (cellType === 3) return { backgroundColor:'#FF6B35', boxShadow:'0 0 8px #FF6B3588', border:'0.5px solid #ff8752' };
+    if (cellType === 1) return { backgroundColor: wallColor, border:'0.5px solid rgba(0,0,0,0.5)' };
     if (showTerrain && terrainGrid[r]?.[c] && terrainGrid[r][c] !== 'empty') {
-      const color = terrainColorMap[terrainGrid[r][c]] || '#1a2540';
+      const color = terrainColorMap[terrainGrid[r][c]] || '#242424';
       return { backgroundColor: color, border:'0.5px solid rgba(255,255,255,0.06)' };
     }
     return { backgroundColor:'rgba(255,255,255,0.025)', border:'0.5px solid rgba(255,255,255,0.04)' };
-  }, [algos, algoSets, showTerrain, terrainGrid, terrainColorMap]);
+  }, [algos, algoSets, showTerrain, terrainGrid, terrainColorMap, wallColor, ALGO_META]);
 
   const interact = useCallback((r: number, c: number) => {
     if (disabled || isAnimating) return;

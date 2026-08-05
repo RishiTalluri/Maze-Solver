@@ -1,15 +1,16 @@
 import React from 'react';
 import { useEditorStore } from '../../store/editorStore';
-import { ALGO_META } from '../../hooks/useSolver';
+import { useAlgoMeta } from '../../hooks/useSolver';
 import { AlgorithmKey, SolveResults } from '../../types';
 
 export const Legend: React.FC = () => {
   const { selectedAlgos } = useEditorStore();
+  const ALGO_META = useAlgoMeta();
   return (
     <div className="flex flex-wrap gap-3 items-center px-3 py-2 border-t border-white/6 text-xs"
-      style={{ background:'rgba(13,24,41,0.8)' }}>
+      style={{ background:'rgba(30,30,30,0.8)' }}>
       <span className="text-[9px] text-surface-600 font-mono tracking-widest uppercase">Legend</span>
-      {[{ color:'#10B981',label:'Start' },{ color:'#EA580C',label:'End' },{ color:'#0d1829',label:'Wall',border:'rgba(255,255,255,0.1)' }].map(({color,label,border}) => (
+      {[{ color:'#FFD166',label:'Start' },{ color:'#FF6B35',label:'End' },{ color:'#1E1E1E',label:'Wall',border:'rgba(255,255,255,0.1)' }].map(({color,label,border}) => (
         <div key={label} className="flex items-center gap-1.5">
           <div style={{ width:10,height:10,borderRadius:2,background:color,border:`1px solid ${border||color}` }}/>
           <span className="text-surface-500">{label}</span>
@@ -36,9 +37,10 @@ export const Legend: React.FC = () => {
 
 export const ResultsPanel: React.FC<{ results: SolveResults }> = ({ results }) => {
   const algos = Object.keys(results) as AlgorithmKey[];
+  const ALGO_META = useAlgoMeta();
   if (algos.length === 0) return null;
   return (
-    <div className="border-t border-white/6 px-3 py-3" style={{ background:'rgba(13,24,41,0.9)' }}>
+    <div className="border-t border-white/6 px-3 py-3" style={{ background:'rgba(30,30,30,0.9)' }}>
       <p className="text-[9px] font-bold text-surface-600 uppercase tracking-widest mb-2.5">Results</p>
       <div className="flex flex-wrap gap-2.5">
         {algos.map(algo => {

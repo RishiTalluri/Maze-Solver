@@ -6,7 +6,7 @@ import { Spinner, EmptyState, SectionHeader } from '../components/ui';
 import { useAuthStore } from '../store/authStore';
 
 const DIFFICULTIES = ['','easy','medium','hard','expert'];
-const DIFF_COLORS: Record<string,string> = { easy:'#10B981', medium:'#f59e0b', hard:'#f97316', expert:'#ef4444' };
+const DIFF_COLORS: Record<string,string> = { easy:'#FFD166', medium:'#f59e0b', hard:'#f97316', expert:'#ef4444' };
 
 export const MazeBrowserPage: React.FC = () => {
   const [mazes, setMazes] = useState<MazeSummary[]>([]);

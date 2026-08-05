@@ -3,18 +3,60 @@ import { solveApi } from '../api/experiments';
 import { useEditorStore } from '../store/editorStore';
 import { AlgorithmKey, AnimStateMap } from '../types';
 
-export const ALGO_META: Record<AlgorithmKey, { label: string; color: string; visitedColor: string }> = {
-  bfs:               { label: 'BFS',         color: '#3b82f6', visitedColor: 'rgba(59,130,246,0.18)'  },
-  dfs:               { label: 'DFS',         color: '#a855f7', visitedColor: 'rgba(168,85,247,0.18)'  },
-  astar:             { label: 'A*',          color: '#10B981', visitedColor: 'rgba(16,185,129,0.18)'  },
-  dijkstra:          { label: 'Dijkstra',    color: '#EA580C', visitedColor: 'rgba(234,88,12,0.18)'   },
-  gbfs:              { label: 'Greedy BFS',  color: '#f59e0b', visitedColor: 'rgba(245,158,11,0.18)'  },
-  bidirectional_bfs: { label: 'Bidir. BFS',  color: '#ec4899', visitedColor: 'rgba(236,72,153,0.18)'  },
+// Static labels only — colors now live in the editor store (algoColors) so
+// they're user-editable at runtime. Use `useAlgoMeta()` inside components to
+// get the current { label, color, visitedColor } for an algorithm; it updates
+// live whenever the user edits colors, no page refresh needed.
+export const ALGO_LABELS: Record<AlgorithmKey, string> = {
+  bfs:               'BFS',
+  dfs:               'DFS',
+  astar:             'A*',
+  dijkstra:          'Dijkstra',
+  gbfs:              'Greedy BFS',
+  bidirectional_bfs: 'Bidir. BFS',
 };
+
+export function hexToRgba(hex: string, alpha: number): string {
+  let h = hex.replace('#', '');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  const num = parseInt(h, 16);
+  if (isNaN(num)) return `rgba(148,163,184,${alpha})`;
+  const r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function buildAlgoMeta(algoColors: Record<AlgorithmKey, { path: string; visited: string }>) {
+  const out = {} as Record<AlgorithmKey, { label: string; color: string; pathColor: string; visitedColorHex: string; visitedColor: string }>;
+  (Object.keys(ALGO_LABELS) as AlgorithmKey[]).forEach(algo => {
+    const pair = algoColors[algo];
+    out[algo] = {
+      label: ALGO_LABELS[algo],
+      color: pair.path,                       // back-compat alias — solid path color
+      pathColor: pair.path,
+      visitedColorHex: pair.visited,           // raw hex, for color pickers
+      visitedColor: hexToRgba(pair.visited, 0.35), // translucent, for grid rendering
+    };
+  });
+  return out;
+}
+
+export type AlgoMeta = ReturnType<typeof buildAlgoMeta>[AlgorithmKey];
+
+// Back-compat snapshot for call sites outside React render (helper functions, etc).
+// Reflects the palette at import time only — prefer `useAlgoMeta()` inside components.
+export const ALGO_META = buildAlgoMeta(useEditorStore.getState().algoColors);
+export const ALL_ALGOS = Object.keys(ALGO_LABELS) as AlgorithmKey[];
+
+// Live hook — use this inside components so path/visited colors update immediately
+// when the user edits them in the Colors editor.
+export function useAlgoMeta(): Record<AlgorithmKey, AlgoMeta> {
+  const algoColors = useEditorStore(s => s.algoColors);
+  return buildAlgoMeta(algoColors);
+}
 
 export function useSolver() {
   const {
-    grid, start, ends, selectedAlgos, speed, terrainGrid, showTerrain, terrainDefs,
+    grid, start, ends, selectedAlgos, terrainGrid, showTerrain, terrainDefs,
     setResults, setIsAnimating, setAnimStates, addAnimTimeout, clearAnimTimeouts,
   } = useEditorStore();
 
@@ -49,57 +91,59 @@ export function useSolver() {
       const data = res.data;
       setResults(data);
 
-      const stepDelay = Math.max(5, 205 - speed * 2);
-      let globalMax = 0;
+      let pending = 0;
+      const onAlgoDone = () => {
+        pending -= 1;
+        if (pending <= 0) setIsAnimating(false);
+      };
 
       selectedAlgos.forEach(algo => {
         const result = data[algo];
         if (!result) return;
         const visited = result.visited || [];
         const path = result.path || [];
+        pending += 1;
 
-        visited.forEach((node, i) => {
+        // Each step re-reads speed from the store live (instead of capturing it once
+        // up front), so dragging the speed slider mid-animation actually speeds up or
+        // slows down the run in progress — it no longer takes a fresh Solve to apply.
+        // Moving the slider itself never touches grid/results, so the maze never resets.
+        const scheduleNext = (isPath: boolean, index: number) => {
+          const liveSpeed = useEditorStore.getState().speed;
+          const delay = Math.max(5, 205 - liveSpeed * 2);
+          const list = isPath ? path : visited;
+
+          if (index >= list.length) {
+            if (isPath) {
+              addAnimTimeout(setTimeout(onAlgoDone, delay));
+            } else {
+              scheduleNext(true, 0);
+            }
+            return;
+          }
+
           const t = setTimeout(() => {
             const cur = useEditorStore.getState().animStates[algo];
             if (!cur) return;
-            setAnimStates({
-              ...useEditorStore.getState().animStates,
-              [algo]: { ...cur, visited: cur.visited.concat([node]), phase: 'visiting' },
-            });
-          }, i * stepDelay);
+            const node = list[index];
+            const next = isPath
+              ? { ...cur, path: cur.path.concat([node]), phase: 'pathing' as const }
+              : { ...cur, visited: cur.visited.concat([node]), phase: 'visiting' as const };
+            setAnimStates({ ...useEditorStore.getState().animStates, [algo]: next });
+            scheduleNext(isPath, index + 1);
+          }, delay);
           addAnimTimeout(t);
-        });
+        };
 
-        const pathStart = visited.length * stepDelay;
-        path.forEach((node, i) => {
-          const t = setTimeout(() => {
-            const cur = useEditorStore.getState().animStates[algo];
-            if (!cur) return;
-            setAnimStates({
-              ...useEditorStore.getState().animStates,
-              [algo]: { ...cur, path: cur.path.concat([node]), phase: 'pathing' },
-            });
-          }, pathStart + i * stepDelay * 0.6);
-          addAnimTimeout(t);
-        });
-
-        const doneAt = pathStart + path.length * stepDelay * 0.6 + 100;
-        const doneT = setTimeout(() => {
-          const cur = useEditorStore.getState().animStates[algo];
-          if (!cur) return;
-          setAnimStates({ ...useEditorStore.getState().animStates, [algo]: { ...cur, phase: 'done' } });
-        }, doneAt);
-        addAnimTimeout(doneT);
-        if (doneAt > globalMax) globalMax = doneAt;
+        scheduleNext(false, 0);
       });
 
-      const finishT = setTimeout(() => setIsAnimating(false), globalMax + 50);
-      addAnimTimeout(finishT);
+      if (pending === 0) setIsAnimating(false);
     } catch (err: any) {
       setIsAnimating(false);
       throw new Error(err.response?.data?.error || 'Failed to connect to backend');
     }
-  }, [grid, start, ends, selectedAlgos, speed, terrainGrid, showTerrain, terrainDefs,
+  }, [grid, start, ends, selectedAlgos, terrainGrid, showTerrain, terrainDefs,
       setResults, setIsAnimating, setAnimStates, addAnimTimeout, clearAnimTimeouts]);
 
   return { solve };

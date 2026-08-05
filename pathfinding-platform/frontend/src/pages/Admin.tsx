@@ -53,10 +53,10 @@ export const AdminPage: React.FC = () => {
       {/* Stats */}
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <StatCard label="Users"       value={stats.users}           icon="👥" color="#EA580C" />
-          <StatCard label="Mazes"       value={stats.mazes}           icon="🧩" color="#10B981" />
+          <StatCard label="Users"       value={stats.users}           icon="👥" color="#FF6B35" />
+          <StatCard label="Mazes"       value={stats.mazes}           icon="🧩" color="#FFD166" />
           <StatCard label="Public"      value={stats.public_mazes}    icon="🌍" color="#63b3ed" />
-          <StatCard label="Algo Runs"   value={stats.algorithm_runs}  icon="⚡" color="#a855f7" />
+          <StatCard label="Algo Runs"   value={stats.algorithm_runs}  icon="⚡" color="#06b6d4" />
           <StatCard label="Experiments" value={stats.experiments}     icon="🧪" color="#f59e0b" />
         </div>
       )}
@@ -80,7 +80,7 @@ export const AdminPage: React.FC = () => {
                 <td className="py-3 px-3">
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black text-white shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #EA580C, #9a3412)' }}>
+                      style={{ background: 'linear-gradient(135deg, #FF6B35, #b93f16)' }}>
                       {u.username[0].toUpperCase()}
                     </div>
                     <span className="font-semibold text-surface-100 text-sm">{u.username}</span>
@@ -102,7 +102,7 @@ export const AdminPage: React.FC = () => {
                   {u.id !== user?.id && u.role !== 'admin' && (
                     <button className="btn-sm btn-danger" disabled={deletingId === u.id}
                       onClick={() => handleDeleteUser(u.id, u.username)}>
-                      {deletingId === u.id ? '...' : 'Delete'}
+                      {deletingId === u.id ? '...' : '🗑️ Delete'}
                     </button>
                   )}
                 </td>

@@ -53,14 +53,14 @@ export const EditorPage: React.FC = () => {
     finally { setSaving(false); }
   };
 
-  if (loadingMaze) return <div className="flex items-center justify-center min-h-screen" style={{ background:'#0d1829' }}><Spinner size="lg"/></div>;
+  if (loadingMaze) return <div className="flex items-center justify-center min-h-screen" style={{ background:'#1E1E1E' }}><Spinner size="lg"/></div>;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden" style={{ background:'linear-gradient(160deg,#0d1829 0%,#182440 50%,#0f2318 100%)' }}>
+    <div className="flex flex-col h-screen overflow-hidden" style={{ background:'linear-gradient(160deg,#1E1E1E 0%,#242424 50%,#1a120d 100%)' }}>
       {/* Top bar */}
-      <div className="flex items-center gap-3 px-3 py-2 border-b border-white/6 shrink-0" style={{ background:'rgba(13,24,41,0.95)' }}>
+      <div className="flex items-center gap-3 px-3 py-2 border-b border-white/6 shrink-0" style={{ background:'rgba(30,30,30,0.95)' }}>
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background:'linear-gradient(135deg,#EA580C,#9a3412)' }}>
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background:'linear-gradient(135deg,#FF6B35,#b93f16)' }}>
             <span className="text-white text-[9px] font-black">PF</span>
           </div>
         </Link>

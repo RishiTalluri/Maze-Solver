@@ -70,7 +70,7 @@ export const MyMazesPage: React.FC = () => {
     setCopied(true); setTimeout(() => setCopied(false), 2000);
   };
 
-  const DIFF_COLORS: Record<string, string> = { easy: '#10B981', medium: '#f59e0b', hard: '#f97316', expert: '#ef4444' };
+  const DIFF_COLORS: Record<string, string> = { easy: '#FFD166', medium: '#f59e0b', hard: '#f97316', expert: '#ef4444' };
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -111,7 +111,7 @@ export const MyMazesPage: React.FC = () => {
                   </button>
                   <button className="btn-sm btn-ghost" onClick={() => { setRenameModal(maze); setNewName(maze.name); }}>Rename</button>
                   <button className="btn-sm btn-ghost" onClick={() => handleShare(maze)}>🔗 Share</button>
-                  <button className="btn-sm btn-danger" onClick={() => handleDelete(maze.id, maze.name)} disabled={processing === maze.id}>✕</button>
+                  <button className="btn-sm btn-danger" onClick={() => handleDelete(maze.id, maze.name)} disabled={processing === maze.id} title="Delete maze">🗑️</button>
                 </div>
               </div>
             </div>

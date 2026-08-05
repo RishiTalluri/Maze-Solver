@@ -93,7 +93,7 @@ export const SectionHeader: React.FC<{ title: string; subtitle?: string; action?
 );
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
-export const StatCard: React.FC<{ label: string; value: string | number; icon: string; color?: string }> = ({ label, value, icon, color = '#EA580C' }) => (
+export const StatCard: React.FC<{ label: string; value: string | number; icon: string; color?: string }> = ({ label, value, icon, color = '#FF6B35' }) => (
   <div className="glass rounded-xl p-4 relative overflow-hidden">
     <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(ellipse at top right, ${color}33 0%, transparent 60%)` }}/>
     <div className="relative">

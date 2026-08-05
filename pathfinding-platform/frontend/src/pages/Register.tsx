@@ -21,12 +21,12 @@ export const RegisterPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative"
-      style={{ background:'linear-gradient(135deg, #0d1829 0%, #182440 50%, #0f2318 100%)' }}>
+      style={{ background:'linear-gradient(135deg, #1E1E1E 0%, #242424 50%, #1a120d 100%)' }}>
       <div className="fixed inset-0 bg-grid opacity-30 pointer-events-none"/>
       <div className="w-full max-w-sm relative">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4"
-            style={{ background:'linear-gradient(135deg,#EA580C,#9a3412)' }}>
+            style={{ background:'linear-gradient(135deg,#FF6B35,#b93f16)' }}>
             <span className="text-white font-black">PF</span>
           </Link>
           <h1 className="text-2xl font-bold text-surface-50">Create account</h1>

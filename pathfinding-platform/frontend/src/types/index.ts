@@ -145,6 +145,17 @@ export interface AlgorithmStats {
   success_rate: number;
 }
 
+export interface GlobalAlgorithmStats extends AlgorithmStats {
+  distinct_users: number;
+}
+
+export interface GlobalStats {
+  total_users: number;
+  contributing_users: number;
+  total_runs: number;
+  algorithms: GlobalAlgorithmStats[];
+}
+
 // ─── Pagination ───────────────────────────────────────────────────────────────
 export interface Paginated<T> {
   items: T[];
