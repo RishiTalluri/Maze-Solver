@@ -159,6 +159,12 @@ const CompareSection: React.FC<{ mazes: MazeSummary[] }> = ({ mazes }) => {
     } finally { setRunning(false); }
   };
 
+  const handleClear = useCallback(() => {
+    setResults(null);
+    setGrid(null);
+    setError('');
+  }, []);
+
   const toggleAlgo = (a: AlgorithmKey) =>
     setSelectedAlgos(p => p.includes(a) ? p.filter(x => x !== a) : [...p, a]);
 
@@ -201,7 +207,7 @@ const CompareSection: React.FC<{ mazes: MazeSummary[] }> = ({ mazes }) => {
 
         {/* Speed */}
         <div className="flex items-center gap-2">
-          <label className="label whitespace-nowrap">Speed {speed}</label>
+          <label className="label whitespace-nowrap">⏱ Speed {speed}</label>
           <input type="range" min={10} max={100} value={speed}
             onChange={e => handleSpeedChange(+e.target.value)}
             className="w-20 accent-primary-500 cursor-pointer"/>
@@ -211,6 +217,13 @@ const CompareSection: React.FC<{ mazes: MazeSummary[] }> = ({ mazes }) => {
           className="btn-md btn-primary whitespace-nowrap">
           {running ? '⏳ Running...' : '▶ Compare'}
         </button>
+
+        {(results || error) && !running && (
+          <button onClick={handleClear} title="Clear results"
+            className="btn-md btn-ghost whitespace-nowrap">
+            🗑️ Clear
+          </button>
+        )}
       </div>
 
       {error && <p className="text-xs text-red-400 mb-3">{error}</p>}

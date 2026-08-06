@@ -1,8 +1,14 @@
 version: "3.9"
 
+# This file lives at the repo root, but the app itself lives under
+# pathfinding-platform/. Build contexts and volumes below point there so
+# `docker-compose up --build` works from wherever this file sits.
+# (There's an identical copy at pathfinding-platform/docker-compose.yml
+# for running it from inside that directory instead.)
+
 services:
   backend:
-    build: ./backend
+    build: ./pathfinding-platform/backend
     ports:
       - "5000:5000"
     environment:
@@ -11,14 +17,14 @@ services:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-jwt-secret}
       - DATABASE_URL=sqlite:///pathfinding.db
     volumes:
-      - ./backend:/app
+      - ./pathfinding-platform/backend:/app
       - db_data:/app/instance
     restart: unless-stopped
 
   frontend:
-    build: ./frontend
+    build: ./pathfinding-platform/frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     environment:
       - REACT_APP_API_URL=http://localhost:5000
     depends_on:

@@ -32,16 +32,53 @@ function randomWalls(rows: number, cols: number, wd: number): Grid {
     Array.from({ length: cols }, () => (Math.random() * 100 < wd ? 1 : 0)) as any);
 }
 
+// Picks Start/End from anywhere among the open cells (not just whichever cell
+// the raster scan happens to hit first, which was always the top-left/bottom-right
+// corner). Biased — not fully random — toward being reasonably far apart: Start is
+// picked uniformly at random, then End is picked at random from whichever open
+// cells clear a minimum distance threshold, so mazes stay interesting instead of
+// occasionally placing Start and End right next to each other.
 function placeStartEnd(grid: Grid, rows: number, cols: number): Grid {
   const g = grid.map(r => [...r]) as Grid;
-  let p = false;
-  for (let r = 0; r < rows && !p; r++)
-    for (let c = 0; c < cols && !p; c++)
-      if (g[r][c] === 0) { g[r][c] = 2 as any; p = true; }
-  p = false;
-  for (let r = rows - 1; r >= 0 && !p; r--)
-    for (let c = cols - 1; c >= 0 && !p; c--)
-      if (g[r][c] === 0) { g[r][c] = 3 as any; p = true; }
+
+  const open: [number, number][] = [];
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c < cols; c++)
+      if (g[r][c] === 0) open.push([r, c]);
+
+  if (open.length === 0) return g; // defensive — shouldn't happen
+  if (open.length === 1) {
+    const [r, c] = open[0];
+    g[r][c] = 2 as any;
+    return g;
+  }
+
+  const [sr, sc] = open[Math.floor(Math.random() * open.length)];
+  g[sr][sc] = 2 as any;
+
+  // "A little far away": require at least ~40% of the grid's diagonal span
+  // (Manhattan distance) between Start and End.
+  const minDist = Math.floor((rows + cols) * 0.4);
+  const dist = ([r, c]: [number, number]) => Math.abs(r - sr) + Math.abs(c - sc);
+
+  let candidates = open.filter(cell => (cell[0] !== sr || cell[1] !== sc) && dist(cell) >= minDist);
+
+  // Small/cramped mazes might not have anything that far — fall back to
+  // whatever open cell is farthest from Start instead of failing the constraint.
+  if (candidates.length === 0) {
+    let best: [number, number] = open[0];
+    let bestDist = -1;
+    for (const cell of open) {
+      if (cell[0] === sr && cell[1] === sc) continue;
+      const d = dist(cell);
+      if (d > bestDist) { bestDist = d; best = cell; }
+    }
+    candidates = [best];
+  }
+
+  const [er, ec] = candidates[Math.floor(Math.random() * candidates.length)];
+  g[er][ec] = 3 as any;
+
   return g;
 }
 

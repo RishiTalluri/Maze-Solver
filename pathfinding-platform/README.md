@@ -89,11 +89,12 @@ pathfinding-platform/
         ├── pages/               ← Landing, Login, Editor, Dashboard, etc.
         ├── components/
         │   ├── editor/          ← MazeGrid, ControlsPanel, StatsPanel
-        │   ├── shared/          ← Navbar, ProtectedRoute
+        │   ├── shared/          ← Navbar (ProtectedRoute is defined inline here, not its own file), ColorsEditor
         │   └── ui/              ← Button, Input, Card, Modal, Badge
         ├── hooks/               ← useSolver (animation engine)
         ├── store/               ← Zustand: authStore, editorStore
         ├── api/                 ← Axios calls: auth, mazes, experiments, analytics
+        ├── utils/               ← mazeGenerator (maze/terrain generation)
         └── types/               ← Full TypeScript types
 ```
 
@@ -132,6 +133,7 @@ favorites      → user_id (FK) + maze_id (FK) [composite PK]
 | GET | /api/experiments/:id/export | ✓ | CSV export |
 | GET | /api/analytics/dashboard | ✓ | Stats summary |
 | GET | /api/analytics/algorithms | ✓ | Per-algo charts |
+| GET | /api/analytics/global | — | Platform-wide stats, all users |
 
 ---
 

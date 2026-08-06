@@ -2,6 +2,8 @@
 
 A full-stack, production-quality pathfinding platform built with **React + TypeScript** (frontend) and **Flask + SQLite** (backend).
 
+> The app itself lives in [`pathfinding-platform/`](./pathfinding-platform). This top-level README covers how to get it running from the repo root; see [`pathfinding-platform/README.md`](./pathfinding-platform/README.md) for the full project structure and database schema.
+
 ---
 
 ## ✨ Features
@@ -11,6 +13,7 @@ A full-stack, production-quality pathfinding platform built with **React + TypeS
 - ⚡ **6 Algorithms** - BFS, DFS, A\*, Dijkstra, Greedy BFS, Bidirectional BFS
 - 🎬 **Real-time Animation** - step-by-step visualization with adjustable speed
 - 🏔 **Weighted Terrain** - grass, sand, mud, water, mountain with configurable costs
+- 🎨 **Fully Customizable Colors** - terrain, walls, and each algorithm's path/explored colors
 - 🎯 **Multiple Goals** - algorithms stop at the nearest reachable goal
 
 ### Platform
@@ -19,6 +22,7 @@ A full-stack, production-quality pathfinding platform built with **React + TypeS
 - 🔗 **Share Links** - generate shareable links with optional expiry
 - 🔬 **Experiment Mode** - run N algorithms on one maze, store + compare results
 - 📊 **Analytics Dashboard** - charts for execution time, nodes explored, success rate
+- 🌐 **Global Stats** - per-algorithm performance aggregated across every user of the platform
 - 🌍 **Public Maze Browser** - search, filter by difficulty, duplicate community mazes
 - ⬇ **CSV Export** - download experiment results
 
@@ -32,11 +36,13 @@ A full-stack, production-quality pathfinding platform built with **React + TypeS
 
 ## 🚀 Quick Start
 
+This README's commands assume you're at the **repo root** — note the `pathfinding-platform/` prefix on every path below, since that's where the actual app lives. (If you `cd pathfinding-platform` first, drop that prefix and follow `pathfinding-platform/README.md` instead.)
+
 ### Option 1 - Manual setup (recommended for development)
 
 **Backend:**
 ```bash
-cd backend
+cd pathfinding-platform/backend
 python -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
@@ -46,7 +52,7 @@ python run.py                 # DB auto-creates, runs on :5000
 
 **Frontend:**
 ```bash
-cd frontend
+cd pathfinding-platform/frontend
 npm install
 npm start                     # runs on :3000
 ```
@@ -56,46 +62,11 @@ Open http://localhost:3000
 ### Option 2 - Docker
 
 ```bash
-cp backend/.env.example backend/.env
+cp pathfinding-platform/backend/.env.example pathfinding-platform/backend/.env
 docker-compose up --build
 ```
 
 Open http://localhost:3000
-
----
-
-## 🏗 Project Structure
-
-```
-pathfinding-platform/
-├── backend/
-│   ├── app/
-│   │   ├── __init__.py          ← App factory
-│   │   ├── config.py            ← Env-based config
-│   │   ├── extensions.py        ← db, jwt, migrate
-│   │   ├── models/              ← SQLAlchemy models
-│   │   ├── auth/                ← Register, login, JWT
-│   │   ├── mazes/               ← CRUD, sharing, favorites
-│   │   ├── algorithms/          ← All 6 algorithms + runner
-│   │   ├── experiments/         ← Multi-algo runs + CSV export
-│   │   ├── analytics/           ← Dashboard + chart data
-│   │   └── admin/               ← Admin-only endpoints
-│   ├── tests/                   ← pytest suite (20 tests)
-│   ├── run.py                   ← Entry point
-│   └── requirements.txt
-│
-└── frontend/
-    └── src/
-        ├── pages/               ← Landing, Login, Editor, Dashboard, etc.
-        ├── components/
-        │   ├── editor/          ← MazeGrid, ControlsPanel, StatsPanel
-        │   ├── shared/          ← Navbar, ProtectedRoute
-        │   └── ui/              ← Button, Input, Card, Modal, Badge
-        ├── hooks/               ← useSolver (animation engine)
-        ├── store/               ← Zustand: authStore, editorStore
-        ├── api/                 ← Axios calls: auth, mazes, experiments, analytics
-        └── types/               ← Full TypeScript types
-```
 
 ---
 
@@ -132,13 +103,10 @@ favorites      → user_id (FK) + maze_id (FK) [composite PK]
 | GET | /api/experiments/:id/export | ✓ | CSV export |
 | GET | /api/analytics/dashboard | ✓ | Stats summary |
 | GET | /api/analytics/algorithms | ✓ | Per-algo charts |
+| GET | /api/analytics/global | — | Platform-wide stats, all users |
 
+---
 
+## 🏗 Project Structure & 🛠 Tech Stack
 
-
-## 🛠 Tech Stack
-
-**Frontend:** React 18 · TypeScript · Tailwind CSS · Zustand · Recharts · Axios · React Router  
-**Backend:** Flask · SQLAlchemy · Flask-JWT-Extended · Flask-Migrate · Werkzeug  
-**Database:** SQLite (development) — swap to PostgreSQL by changing `DATABASE_URL` env var  
-**DevOps:** Docker · docker-compose · Nginx (production SPA routing)
+See [`pathfinding-platform/README.md`](./pathfinding-platform/README.md) for the full folder-by-folder breakdown and the tech stack — kept there rather than duplicated here so it can't drift out of sync with the code.

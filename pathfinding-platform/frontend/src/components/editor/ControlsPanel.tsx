@@ -131,21 +131,31 @@ export const ControlsPanel: React.FC<Props> = ({ onSolve, onStop, onSave, isSolv
       <div className="bg-surface-900/90 backdrop-blur border-b border-white/6 px-3 py-1.5">
         <div className="flex items-center gap-1.5 flex-wrap">
 
-          {/* Settings popover trigger — grid size + speed */}
-          <button onClick={() => setShowSettings(true)} title="Grid size & speed"
+          {/* Grid size popover trigger */}
+          <button onClick={() => setShowSettings(true)} title="Grid size"
             className="flex items-center gap-1 px-2 py-1.5 text-[10px] font-bold rounded-lg border border-white/8 text-surface-400 hover:text-surface-200 hover:bg-white/5 transition-all">
-            ⚙ <span className="font-mono text-surface-500">{rows}×{cols}</span>
+            ⚙ <span className="hidden sm:inline">Grid</span> <span className="font-mono text-surface-500">{rows}×{cols}</span>
           </button>
+
+          {/* Speed — always visible, live during animation */}
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-white/8" title="Solve speed — drag any time, even mid-animation">
+            <span className="text-[10px] font-bold text-surface-500">⏱</span>
+            <input type="range" min={1} max={100} value={speed}
+              onChange={e => setSpeed(+e.target.value)}
+              className="w-14 accent-primary-500 cursor-pointer"/>
+            <span className="text-[10px] font-mono text-surface-500 w-6 text-right">{speed}</span>
+          </div>
 
           <div className="divider h-5"/>
 
-          {/* Draw modes — icon-only, compact */}
+          {/* Draw modes — icon + short label so intent is clear at a glance */}
           <div className="flex items-center gap-0.5">
             {DRAW_MODES.map(m => (
               <button key={m.key} onClick={() => setDrawMode(m.key)} title={m.label}
                 style={drawMode === m.key ? { color: m.color, borderColor: m.color, background: `${m.color}18` } : {}}
-                className={`w-7 h-7 flex items-center justify-center text-sm rounded-lg border transition-all ${drawMode === m.key ? '' : 'border-transparent text-surface-500 hover:text-surface-300 hover:bg-white/5'}`}>
-                {m.icon}
+                className={`flex items-center gap-1 px-2 py-1.5 text-[10px] font-bold rounded-lg border transition-all ${drawMode === m.key ? '' : 'border-transparent text-surface-500 hover:text-surface-300 hover:bg-white/5'}`}>
+                <span>{m.icon}</span>
+                <span className="hidden sm:block">{m.label}</span>
               </button>
             ))}
           </div>
@@ -164,12 +174,12 @@ export const ControlsPanel: React.FC<Props> = ({ onSolve, onStop, onSave, isSolv
                   </button>
                 ))}
                 <button onClick={() => setShowTerrainEditor(true)} title="Edit terrain costs / add custom terrain"
-                  className="w-7 h-7 flex items-center justify-center text-xs rounded-lg border border-white/8 text-surface-500 hover:text-primary-400 hover:border-primary-500/30 transition-all">
-                  ✎
+                  className="flex items-center gap-1 px-1.5 py-1 text-[10px] font-bold rounded-lg border border-white/8 text-surface-500 hover:text-primary-400 hover:border-primary-500/30 transition-all">
+                  <span>✎</span><span className="hidden lg:block">Edit</span>
                 </button>
-                <button onClick={() => setShowTerrain(!showTerrain)} title={showTerrain ? 'Hide terrain' : 'Show terrain'}
-                  className={`w-7 h-7 flex items-center justify-center text-xs rounded-lg border transition-all ${showTerrain ? 'border-accent-500/40 bg-accent-500/10 text-accent-400' : 'border-white/8 text-surface-500'}`}>
-                  👁
+                <button onClick={() => setShowTerrain(!showTerrain)} title={showTerrain ? 'Hide terrain overlay' : 'Show terrain overlay'}
+                  className={`flex items-center gap-1 px-1.5 py-1 text-[10px] font-bold rounded-lg border transition-all ${showTerrain ? 'border-accent-500/40 bg-accent-500/10 text-accent-400' : 'border-white/8 text-surface-500'}`}>
+                  <span>👁</span><span className="hidden lg:block">{showTerrain ? 'ON' : 'OFF'}</span>
                 </button>
               </div>
             </>
@@ -178,13 +188,13 @@ export const ControlsPanel: React.FC<Props> = ({ onSolve, onStop, onSave, isSolv
           <div className="divider h-5"/>
 
           {/* Colors — single entry point for terrain, wall, and per-algorithm path/explored colors */}
-          <button onClick={() => setShowColors(true)} title="Edit colors"
-            className="w-7 h-7 flex items-center justify-center text-sm rounded-lg border border-white/8 text-surface-500 hover:text-primary-400 hover:border-primary-500/30 transition-all">
-            🎨
+          <button onClick={() => setShowColors(true)} title="Edit terrain, wall, and algorithm colors"
+            className="flex items-center gap-1 px-2 py-1.5 text-[10px] font-bold rounded-lg border border-white/8 text-surface-400 hover:text-surface-200 hover:bg-white/5 transition-all">
+            🎨 <span className="hidden sm:block">Colors</span>
           </button>
 
           {/* Algorithms — compact popover trigger instead of N inline buttons */}
-          <button onClick={() => setShowAlgoPicker(true)}
+          <button onClick={() => setShowAlgoPicker(true)} title="Choose which algorithms to run"
             className="flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-bold rounded-lg border border-white/8 text-surface-300 hover:bg-white/5 transition-all">
             <span className="flex -space-x-1">
               {selectedAlgos.slice(0, 4).map(a => (
@@ -197,28 +207,35 @@ export const ControlsPanel: React.FC<Props> = ({ onSolve, onStop, onSave, isSolv
           {/* Actions */}
           <div className="flex items-center gap-1.5 ml-auto">
             {error && <span className="text-[10px] text-red-400 font-medium hidden sm:block">✗ {error}</span>}
-            <button onClick={() => setShowGenerator(true)}
+            <button onClick={() => setShowGenerator(true)} title="Auto-generate a new maze layout"
               className="flex items-center gap-1 px-2 py-1 text-[10px] font-bold rounded-lg border border-accent-500/30 text-accent-400 bg-accent-500/8 hover:bg-accent-500/15 transition-all">
               ⚡ Generate
             </button>
             {isSolving ? (
-              <button onClick={onStop}
+              <button onClick={onStop} title="Stop the running solve"
                 className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold rounded-lg border border-red-500/40 text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all">
                 ⏹ Stop
               </button>
             ) : (
-              <button onClick={onSolve} disabled={!canSolve}
+              <button onClick={onSolve} disabled={!canSolve} title="Run the selected algorithms"
                 className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed btn-primary btn-sm">
                 ▶ Solve
               </button>
             )}
-            {hasResults && !isSolving && (
-              <button onClick={clearPaths} className="w-7 h-7 flex items-center justify-center text-xs rounded-lg border border-white/8 text-surface-500 hover:text-surface-300 hover:bg-white/5 transition-all" title="Clear paths">↺</button>
-            )}
+            <button onClick={clearPaths} disabled={!hasResults || isSolving} title="Clear solved paths (keeps the maze layout)"
+              className="flex items-center gap-1 px-2 py-1 text-[10px] font-bold rounded-lg border border-white/8 text-surface-500 hover:text-surface-300 hover:bg-white/5 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-surface-500">
+              ↺ <span className="hidden sm:block">Clear</span>
+            </button>
             {onSave && (
-              <button onClick={onSave} className="w-7 h-7 flex items-center justify-center text-xs rounded-lg border border-white/8 text-surface-500 hover:text-surface-300 hover:bg-white/5 transition-all" title="Save">💾</button>
+              <button onClick={onSave} title="Save this maze"
+                className="flex items-center gap-1 px-2 py-1 text-[10px] font-bold rounded-lg border border-white/8 text-surface-500 hover:text-surface-300 hover:bg-white/5 transition-all">
+                💾 <span className="hidden sm:block">Save</span>
+              </button>
             )}
-            <button onClick={resetGrid} className="w-7 h-7 flex items-center justify-center text-xs rounded-lg border border-white/8 text-surface-500 hover:text-red-400 hover:border-red-500/30 transition-all" title="Reset">⊠</button>
+            <button onClick={resetGrid} title="Reset — clears the entire grid, start/end, and results"
+              className="flex items-center gap-1 px-2 py-1 text-[10px] font-bold rounded-lg border border-white/8 text-surface-500 hover:text-red-400 hover:border-red-500/30 transition-all">
+              🗑️ <span className="hidden sm:block">Reset</span>
+            </button>
           </div>
         </div>
         {(!start || ends.length === 0) && (
@@ -228,27 +245,18 @@ export const ControlsPanel: React.FC<Props> = ({ onSolve, onStop, onSave, isSolv
         )}
       </div>
 
-      {/* ── Settings Popover: grid size + speed ─────────────────────────────── */}
-      <Modal open={showSettings} onClose={() => setShowSettings(false)} title="⚙ Grid & Speed" maxWidth="max-w-xs">
-        <div className="space-y-4">
-          <div>
-            <label className="label">Grid Size</label>
-            <div className="flex items-center gap-2">
-              <input type="number" min={5} max={60} value={rows}
-                onChange={e => setSize(Math.min(60, Math.max(5, +e.target.value)), cols)}
-                className="input text-center"/>
-              <span className="text-surface-600 text-sm">×</span>
-              <input type="number" min={5} max={80} value={cols}
-                onChange={e => setSize(rows, Math.min(80, Math.max(5, +e.target.value)))}
-                className="input text-center"/>
-            </div>
-          </div>
-          <div>
-            <label className="label">Solve Speed: {speed}</label>
-            <input type="range" min={1} max={100} value={speed}
-              onChange={e => setSpeed(+e.target.value)}
-              className="w-full accent-primary-500 cursor-pointer"/>
-            <p className="text-[10px] text-surface-600 mt-1">Drag this while a solve is animating — it takes effect immediately, and the maze itself never resets.</p>
+      {/* ── Grid Size Popover ─────────────────────────────────────────────────── */}
+      <Modal open={showSettings} onClose={() => setShowSettings(false)} title="⚙ Grid Size" maxWidth="max-w-xs">
+        <div>
+          <label className="label">Rows × Columns</label>
+          <div className="flex items-center gap-2">
+            <input type="number" min={5} max={60} value={rows}
+              onChange={e => setSize(Math.min(60, Math.max(5, +e.target.value)), cols)}
+              className="input text-center"/>
+            <span className="text-surface-600 text-sm">×</span>
+            <input type="number" min={5} max={80} value={cols}
+              onChange={e => setSize(rows, Math.min(80, Math.max(5, +e.target.value)))}
+              className="input text-center"/>
           </div>
         </div>
       </Modal>
