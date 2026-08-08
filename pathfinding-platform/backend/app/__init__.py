@@ -12,7 +12,11 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
-    CORS(app, resources={r"/api/.*": {"origins": app.config.get("CORS_ORIGINS", "*")}}, supports_credentials=True)
+    # Parse CORS origins (comma-separated in env var, e.g. "https://a.vercel.app,https://b.vercel.app")
+    cors_origins = app.config.get("CORS_ORIGINS", "*")
+    if cors_origins != "*":
+        cors_origins = [o.strip() for o in cors_origins.split(",")]
+    CORS(app, resources={r"/api/.*": {"origins": cors_origins}})
 
     # Import models so Flask-Migrate can detect them
     from app.models import User, Maze, AlgorithmRun, Experiment, SharedLink, Favorite
