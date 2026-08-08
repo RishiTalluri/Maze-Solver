@@ -1,0 +1,34 @@
+# render.yaml — Render Blueprint (Infrastructure as Code)
+# This file lets Render auto-detect your service configuration.
+# Place it at the repo root so Render can find it.
+
+services:
+  - type: web
+    name: maze-solver-api
+    runtime: python
+    region: oregon
+    rootDir: pathfinding-platform/backend
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: maze-solver-db
+          property: connectionURI
+      - key: CORS_ORIGINS
+        value: https://your-vercel-app.vercel.app
+      - key: PYTHON_VERSION
+        value: "3.11.6"
+
+databases:
+  - name: maze-solver-db
+    plan: free
+    region: oregon
+    databaseName: pathfinding
+    user: pathfinding_user
