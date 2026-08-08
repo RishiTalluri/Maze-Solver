@@ -12,9 +12,15 @@ class Config:
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
     # SQLite by default (CS50-style), swap to PostgreSQL by just changing this env var
+    # Render provides DATABASE_URL with postgres:// which SQLAlchemy 2.x doesn't accept
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "sqlite:///pathfinding.db")
+    if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False  # Set True to see SQL queries in console
+
+    # CORS: restrict to your Vercel frontend in production
+    CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "*")
 
 
 class DevelopmentConfig(Config):

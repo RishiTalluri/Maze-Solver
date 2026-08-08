@@ -12,7 +12,7 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/api/*": {"origins": app.config.get("CORS_ORIGINS", "*")}})
 
     # Import models so Flask-Migrate can detect them
     from app.models import User, Maze, AlgorithmRun, Experiment, SharedLink, Favorite

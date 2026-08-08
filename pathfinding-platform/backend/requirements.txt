@@ -6,3 +6,5 @@ flask-migrate==4.0.5
 werkzeug==3.0.1
 python-dotenv==1.0.0
 marshmallow==3.20.2
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
